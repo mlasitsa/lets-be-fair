@@ -1,30 +1,49 @@
-// import React from 'react'
+import React from 'react';
 
-const Toggle = ({buttonName, description} : {buttonName: string, description?: string}) => {
+type ToggleProps = {
+  buttonName: string;
+  description?: string;
+  onRoleChange: (role: string) => void;
+  selectedRole?: string;
+};
+
+const Toggle = ({
+  buttonName,
+  description,
+  onRoleChange,
+  selectedRole
+}: ToggleProps) => {
+  const value = buttonName.toLowerCase().replace(/\s+/g, '-');
+
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onRoleChange(e.target.value);
+  };
+
   return (
-    <>
-    <div>
+    <div className="w-full max-w-md">
       <label
-        htmlFor={buttonName}
-        className="flex items-center justify-between gap-4 rounded border border-gray-300 bg-white p-3 text-sm font-medium shadow-sm transition-colors hover:bg-gray-50 has-checked:border-blue-600 has-checked:ring-1 has-checked:ring-blue-600"
+        htmlFor={value}
+        className={`flex items-center justify-between gap-4 rounded border p-3 text-sm font-medium shadow-sm transition-colors 
+          ${selectedRole === value ? 'border-blue-600 ring-1 ring-blue-600 bg-blue-50' : 'border-gray-300 bg-white hover:bg-gray-50'}
+        `}
       >
-        <div>
+        <div className="text-left">
           <p className="text-gray-900">{buttonName}</p>
-          <p className="text-gray-700">{description? description : ""}</p>
+          {description && <p className="text-gray-500">{description}</p>}
         </div>
 
         <input
           type="radio"
-          name={buttonName}
-          value={buttonName}
-          id={buttonName}
+          name="role"
+          value={value}
+          id={value}
           className="size-5 border-gray-300"
-          checked
+          onChange={changeHandler}
+          checked={selectedRole === value}
         />
       </label>
     </div>
-    </>
-  )
-}
+  );
+};
 
-export default Toggle
+export default Toggle;
