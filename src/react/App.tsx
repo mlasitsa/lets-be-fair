@@ -1,15 +1,22 @@
 // import { useState } from 'react'
 import './App.css'
-import Form from '../components/Form'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import InterviewerPage from './pages/InterviewerPage';
+import IntervieweePage from './pages/IntervieweePage';
+import StartPage from './pages/StartPage';
+
 
 function App() {
 
   return (
     <>
-      <h1 className='flex align-ceter justify-center text-yellow-400'>Hello</h1>
-
-      <Form />
-
+    <Router>
+      <Routes>
+        <Route path="/interviewer" element={<InterviewerPage />} />
+        <Route path="/interviewee" element={<IntervieweePage />} />
+        <Route path='/' element={<StartPage />} />
+      </Routes>
+    </Router>
     </>
   )
 }
