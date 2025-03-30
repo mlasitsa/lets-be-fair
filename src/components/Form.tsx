@@ -21,13 +21,6 @@ const Form = () => {
     }
     console.log(role)
   }
-  /*
-  I think here I will need to add onsubmit that will send to 2 Different pages that will have another Form to fill out
-  One will be for interviewer, another for interviewee
-  Once the interviewer entres info and generates code -> we need to estable WebSocket connection and wait for the interviewee to enter the code
-  Once interviewee joined and connectiong is active, we need to start kicking off python script that checks for the applications that are running 
-  and if any external tools are used (bluetooth headset/extrnal monitor/ etc)
-  */
 
   return (
     <div>
