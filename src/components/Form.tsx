@@ -6,7 +6,6 @@ import { useNavigate } from 'react-router-dom';
 const Form = () => {
 
   const [value, setValue] = useState('')
-  const [link, setLink] = useState('')
   const navigate = useNavigate()
 
 
