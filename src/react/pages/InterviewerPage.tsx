@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useSocket } from '../../hooks/useSocket';
 import SignUpForm from '../../components/SignUpForm';
+import Participants from '../../components/Participants';
 
 interface InterviewerData {
   firstName: string;
   lastName: string;
-  code: string;               
+  code: string;              
 }
 
 const IntervieweePage = () => {
@@ -17,7 +18,7 @@ const IntervieweePage = () => {
 
   const [isSessionStarted, setIsSessionStarted] = useState(false);
   const [interviewee, setInterviewee] = useState<string | undefined>("");
-  const [data, setData] = useState<any>(null);
+  const [candidateData, setCandidateData] = useState<any>(null);
   
 
 
@@ -31,7 +32,7 @@ const IntervieweePage = () => {
         console.log(`Session started with: ${interviewer} and ${candidate}`);
       },
       onCandidateData: (data) => {
-        setData(data);
+        setCandidateData(data);
         console.log('Received candidate process data:', data);
       }
     },
@@ -43,13 +44,16 @@ const IntervieweePage = () => {
       { !isSessionStarted ?
       <SignUpForm
         isInterviewer={true}
-        page="Interviewee Page"
+        page="Interviewer Page"
         setData={setInterviewer}
         onSubmit={() => setIsSessionStarted(true)}
       /> 
       :
-      !interviewee ? <div> loading </div> :
-        <div>{interviewee}</div>
+      !interviewee ? 
+
+      <div> loading </div> 
+      :
+        <Participants isInterviewer={true} candidateName={interviewee} candidateData={candidateData} interviewerName={`${interviewer.firstName} ${interviewer.lastName}`}/>
       }
 
     </div>
