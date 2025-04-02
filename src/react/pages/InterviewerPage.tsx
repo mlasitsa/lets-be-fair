@@ -16,6 +16,10 @@ const IntervieweePage = () => {
   });
 
   const [isSessionStarted, setIsSessionStarted] = useState(false);
+  const [interviewee, setInterviewee] = useState<string | undefined>("");
+  const [data, setData] = useState<any>(null);
+  
+
 
   const socket = useSocket(
     {
@@ -23,9 +27,11 @@ const IntervieweePage = () => {
       roomCode: interviewer.code,
       name: `${interviewer.firstName} ${interviewer.lastName}`,
       onSessionStart: ({ interviewer, candidate }) => {
+        setInterviewee(candidate)
         console.log(`Session started with: ${interviewer} and ${candidate}`);
       },
       onCandidateData: (data) => {
+        setData(data);
         console.log('Received candidate process data:', data);
       }
     },
@@ -34,12 +40,18 @@ const IntervieweePage = () => {
 
   return (
     <div>
+      { !isSessionStarted ?
       <SignUpForm
         isInterviewer={true}
         page="Interviewee Page"
         setData={setInterviewer}
         onSubmit={() => setIsSessionStarted(true)}
-      />
+      /> 
+      :
+      !interviewee ? <div> loading </div> :
+        <div>{interviewee}</div>
+      }
+
     </div>
   );
 };
