@@ -1,7 +1,9 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 const ipcRenderer = window.require?.('electron')?.ipcRenderer;
-interface InterviewerData {
+interface CandidateData {
   firstName: string;
   lastName: string;
   code: string;
@@ -10,18 +12,38 @@ interface InterviewerData {
 type SignUpFormProps = {
   isInterviewer: boolean;
   page: string;
-  setData: React.Dispatch<React.SetStateAction<InterviewerData>>;
-  onSubmit: () => void;
+  setData: React.Dispatch<React.SetStateAction<CandidateData>>;
+  code: number | string;
+  info?: any;
 };
 
-const SignUpForm = ({ isInterviewer, page, setData, onSubmit }: SignUpFormProps) => {
+const SignUpForm = ({ isInterviewer, page, setData, code, info }: SignUpFormProps) => {
+
+  const navigate = useNavigate(); 
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit();
 
     if (!isInterviewer && ipcRenderer) {
         ipcRenderer.send("start-python", "interviewee");
       }
+
+    if (isInterviewer) {
+      navigate(`/room/${code}`, {
+        state: {
+          info: info,
+          isInterviewer: isInterviewer,
+        }
+      }); 
+    } else {
+      navigate(`/room/${code}`, {
+        state: {
+          info: info,
+          isInterviewer: isInterviewer,
+        }
+      })
+    }
+    
   };
 
   return (
