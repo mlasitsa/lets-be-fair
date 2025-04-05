@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { useSocket } from '../../hooks/useSocket';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -14,6 +15,15 @@ const Room = () => {
     const [data, setData] = useState<{ interviewer: string, interviewee: string } | null>(null);
     console.log(info)
     console.log(isInterviewer)
+    const navigate = useNavigate()
+
+    const goBack = () => {
+      if (isInterviewer) {
+        navigate('/interviewer')
+      } else {
+        navigate('/interviewee')
+      }
+    }
 
     useEffect(() => {
       console.log('Data updated:', data);
@@ -37,13 +47,24 @@ const Room = () => {
         // }
       });
 return (
-        <div>
+        <div className='bg-[#C0D8DD]'>
           <div>Room Code: {info.code}</div>
-          <div>{data ? isInterviewer ? data?.interviewee : data?.interviewer : "No Data" }</div>
-          {/* <div>You are: {isInterviewer ? data : }</div> */}
-          <div>
-            {/* Peer: {peer ? isInterviewer ? interviewerr : candidate : "Waiting for other user..."} */}
-          </div>
+          {isInterviewer ?
+          <>
+          <div>Interviewer Page</div>
+          <div>Candidate is: {data ? data.interviewee : "Waiting for candidate jo join..." }</div>
+          </>
+          :
+          
+          <>
+          <div>Interviewee Page</div>
+          <div> Your interviewer is: {data ? data.interviewer : "Waiting for interviewer to join..." }</div>
+          </>
+          }
+
+
+          <h1>If you think you have joined wrong session, you can always go back to previous form, to change your code</h1>
+          <button onClick={goBack}>Back to Form</button>
         </div>
       );
   
