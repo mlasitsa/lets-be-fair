@@ -17,7 +17,6 @@ const IntervieweePage = () => {
         lastName: "",
         code: ""
     })
-    const [error, setError] = useState<boolean>(false)
 
 
     console.log(interviewee)
@@ -30,9 +29,7 @@ const IntervieweePage = () => {
             setData={setInterviewee}
             code={interviewee.code}
             info={interviewee}
-            setError={setError}
         />
-        {error && <span>There is no active room with this code, please check with your interviewer</span>}
     </div>
   )
 }

@@ -1,44 +1,40 @@
 import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
 
-type Data = {
+interface Data {
     code: string,
     isInterviewer: boolean,
     setRoomExist: (data: boolean) => void
+    onSuccess: () => void
 }
 
 
-const useValidateRoom = ({code, isInterviewer, setRoomExist} : Data) => {  
+const validateRoom = ({code, isInterviewer, setRoomExist, onSuccess} : Data) => {  
     console.log(code)
 
 
-    useEffect(() => {
-        const socket = io('http://localhost:3001');
+    const socket = io('http://localhost:3001');
 
-        socket.emit("checkRoom", {code, isInterviewer})
+    socket.emit("checkRoom", { code, isInterviewer });
 
+    const event = isInterviewer ? "checkRoom-interviewer" : "checkRoom-interviewee";
+
+    socket.on(event, (roomIsFree) => {
         if (isInterviewer) {
-            socket.on("checkRoom-interviewer", (answer) => {
-                if (answer) {
-                    setRoomExist(true)
-                } else {
-                    setRoomExist(false)
-                }
-            })
-        } else {
-            socket.on("checkRoom-interviewee" , (answer) => {
-                if (answer) {
-                    setRoomExist(true)
-                } else {
-                    setRoomExist(false)
-                }
-            })
-
-        }
-        return () => {
+        setRoomExist(roomIsFree); 
+        if (roomIsFree) {
+            onSuccess();
             socket.disconnect();
-        };
-    },[code])
-} 
+        }
+        } else {
+        setRoomExist(roomIsFree);
+        if (roomIsFree) {
+            onSuccess();
+            socket.disconnect();
+        }
+        }
+    });
+    };
 
-export default useValidateRoom
+
+export default validateRoom

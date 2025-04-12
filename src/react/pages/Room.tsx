@@ -34,17 +34,6 @@ const Room = () => {
         roomCode: info.code,
         name: `${info.firstName} ${info.lastName}`,
         setData: setData,
-        // onPeerJoined: (peerInfo) => {
-        //   setPeer(peerInfo);
-        // },
-        // onSessionStart: ({ interviewer, candidate }) => {
-        //     setInterviwerr(interviewer);
-        //     setCandidate(candidate);
-        //   console.log(`Session started with: ${interviewer} and ${candidate}`);
-        // },
-        // onCandidateData: (data) => {
-        //   console.log('Received candidate process data:', data);
-        // }
       });
 return (
         <div className='bg-[#C0D8DD]'>

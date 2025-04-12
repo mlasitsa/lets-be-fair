@@ -5,7 +5,7 @@ import { z } from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {io, Socket} from 'socket.io-client'
-import useValidateRoom from '../hooks/validateRoomSocket';
+import validateRoom from '../hooks/validateRoomSocket';
 
 
 const ipcRenderer = window.require?.('electron')?.ipcRenderer;
@@ -27,12 +27,14 @@ type SignUpFormProps = {
   isInterviewer: boolean;
   page: string;
   setData: React.Dispatch<React.SetStateAction<CandidateData>>;
-  code: number | string;
+  code: string;
   info?: any;
-  setError: any // QUESTIONS HERE  (CFIGURE OUR PROPS PASSING AND LIFTINGS OF STATES)
 };
 
-const SignUpForm = ({ isInterviewer, page, setData, code, info }: SignUpFormProps) => {
+const SignUpForm = ({ isInterviewer, page, setData, code, info}: SignUpFormProps) => {
+
+  const [error, setError] = useState<boolean>(isInterviewer)
+
   const { register, handleSubmit, watch, formState: { errors } } = useForm<userData>({
     mode: "onChange",
     resolver: zodResolver(User)
@@ -42,29 +44,35 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info }: SignUpFormProp
 
   const onSubmit = (data: userData) => {
     
+    validateRoom({
+      code,
+      isInterviewer, 
+      setRoomExist: setError,
+      onSuccess: () => {
+        setData(data)
+        console.log("Data from useForm Hooks", data)
 
-
-    console.log(data)
-    setData(data)
     if (!isInterviewer && ipcRenderer) {
         ipcRenderer.send("start-python", "interviewee");
       }
     
     if (isInterviewer) {
-      navigate(`/room/${code}`, {
+      navigate(`/room/${data.code}`, {
         state: {
           info: info,
           isInterviewer: isInterviewer,
         }
       }); 
     } else {
-      navigate(`/room/${code}`, {
+      navigate(`/room/${data.code}`, {
         state: {
           info: info,
           isInterviewer: isInterviewer,
         }
       })
     }
+      }
+    })   
     
   };
 
@@ -129,6 +137,16 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info }: SignUpFormProp
           {errors.firstName && <span>This field is required and must contain only characters</span>}
           {errors.lastName && <span>Last name is required and must contain only charaters</span>}
           {errors.code && <span>Code must contain numbers only and have 4 digit code</span>}
+          {isInterviewer ? 
+          (!error && <span>
+            This code is already exist, please create a different code
+          </span>)
+          :
+          ( error &&
+          <span>
+            There is no active room with this code, please check with your interviewer
+          </span>
+          )}
         </div>
       </form>
     </div>
