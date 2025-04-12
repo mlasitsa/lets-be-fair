@@ -62,13 +62,13 @@ io.on('connection', (socket) => {
 
   socket.on("checkRoom", ({code, isInterviewer}) => {
     if (isInterviewer) {
-      if (!roomCode[code]) {
+      if (!rooms[code]) {
         socket.emit('checkRoom-interviewer', true)
       } else {
         socket.emit('checkRoom-interviewer', false)
       }
     } else {
-      if (!roomCode[code]) {
+      if (!rooms[code]) {
         socket.emit('checkRoom-interviewee' , false)
       } else {
         socket.emit('checkRoom-interviewee', true)
