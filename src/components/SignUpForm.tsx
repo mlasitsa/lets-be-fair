@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { z } from "zod";
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+
 
 const ipcRenderer = window.require?.('electron')?.ipcRenderer;
 interface CandidateData {
@@ -28,12 +30,16 @@ type SignUpFormProps = {
 };
 
 const SignUpForm = ({ isInterviewer, page, setData, code, info }: SignUpFormProps) => {
-  const { register, handleSubmit, watch, formState: { errors } } = useForm();
+  const { register, handleSubmit, watch, formState: { errors } } = useForm<userData>({
+    mode: "onChange",
+    resolver: zodResolver(User)
+  });
 
   const navigate = useNavigate(); 
 
   const onSubmit = (data: userData) => {
 
+    console.log(data)
     setData(data)
     if (!isInterviewer && ipcRenderer) {
         ipcRenderer.send("start-python", "interviewee");
@@ -70,7 +76,8 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info }: SignUpFormProp
           </label>
           <input
             {...register("firstName",
-              {required: true })}
+              {required: true 
+              })}
             type="text"
             placeholder="Enter your first name"
             className="w-full rounded-md px-4 py-2 bg-white text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -82,12 +89,12 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info }: SignUpFormProp
             Last Name
           </label>
           <input
+            {...register("lastName", {
+              required: true
+            })}
             type="text"
-            id="last-name"
-            name="last-name"
             placeholder="Enter your last name"
             className="w-full rounded-md px-4 py-2 bg-white text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setData((prev) => ({ ...prev, lastName: e.target.value }))}
           />
         </div>
 
@@ -96,12 +103,12 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info }: SignUpFormProp
             {isInterviewer ? "Generate 4-Digit Code" : "Enter 4-Digit Code"}
         </label>
             <input
+            {...register("code", {
+              required: true
+            })}
             type="text"
-            id="roomCode"
-            name="roomCode"
             placeholder={isInterviewer ? "1234" : "Enter the code"}
             className="w-full rounded-md px-4 py-2 bg-white text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            onChange={(e) => setData((prev) => ({ ...prev, code: e.target.value }))}
         />
         </div>
 
@@ -112,6 +119,12 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info }: SignUpFormProp
         >
           Start Session
         </button>
+
+        <div className='flex flex-col mx-auto text-center text-white font-bold'>
+          {errors.firstName && <span>This field is required and must contain only characters</span>}
+          {errors.lastName && <span>Last name is required and must contain only charaters</span>}
+          {errors.code && <span>Code must contain numbers only and have 4 digit code</span>}
+        </div>
       </form>
     </div>
   );
