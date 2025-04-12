@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useState } from 'react'
 import { useSocket } from '../../hooks/useSocket'
 import SignUpForm from '../../components/SignUpForm'
+import Participants from '../../components/Participants'
 
 interface IntervieweeData {
     firstName: string;
@@ -17,28 +18,16 @@ const IntervieweePage = () => {
         code: ""
     })
 
-    const [isSessionStarted, setIsSessionStarted] = useState(false);
-
-    const socket = useSocket({
-        role: 'interviewee',
-        roomCode: interviewee.code, 
-        name: `${interviewee.firstName} ${interviewee.lastName}`,
-        onSessionStart: ({ interviewer, candidate }) => {
-          console.log(`Session started with: ${interviewer} and ${candidate}`);
-        },
-        onCandidateData: (data) => {
-          console.log("Received candidate process data:", data);
-        }
-      }, isSessionStarted);
-
+    console.log(interviewee)
       
   return (
     <div>
         <SignUpForm 
             isInterviewer={false}
-            page="Interviewer Page"
+            page="Interviewee Page"
             setData={setInterviewee}
-            onSubmit={() => setIsSessionStarted(true)}
+            code={interviewee.code}
+            info={interviewee}
         />
     </div>
   )

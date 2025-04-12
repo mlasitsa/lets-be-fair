@@ -36,18 +36,47 @@ io.on('connection', (socket) => {
     rooms[roomCode].candidate = { socketId: socket.id, name };
     console.log(`Candidate ${name} joined room ${roomCode}`);
 
-    io.to(roomCode).emit('session-started', {
-      interviewer: rooms[roomCode].interviewer.name,
-      candidate: name
-    });
+    const interviewer = rooms[roomCode].interviewer.name;
+    console.log("Hello from server:", interviewer)
+    const interviewee = rooms[roomCode].candidate.name;
+    console.log("Hello from server:", interviewee)
+
+    if (interviewer && interviewee) {
+      io.to(roomCode).emit('session-started', {
+        interviewer: interviewer,
+        interviewee: interviewee
+      })
+    }
+    // if (interviewer) {
+    //   socket.emit("user-joined", {
+    //     name: interviewer.name,
+    //     role: true
+    //   })
+    //   if (interviewer && interviewee) {
+    //     io.to(roomCode).emit('session-started', {
+    //       interviewer: interviewer.name,
+    //       candidate: interviewee
+    //     });
+    //   }
+    // }
   });
 
-  socket.on('process-update', ({ roomCode, data }) => {
-    if (!rooms[roomCode]) return;
+  // socket.on('process-update', ({ roomCode, data }) => {
+  //   if (!rooms[roomCode]) return;
     
-    const interviewerSocketId = rooms[roomCode].interviewer.socketId;
-    io.to(interviewerSocketId).emit('candidate-data', data);
-  });
+  //   const interviewerSocketId = rooms[roomCode].interviewer.socketId;
+  //   io.to(interviewerSocketId).emit('candidate-data', data);
+  // });
+
+  // socket.on('user-joined', ({ name, role }) => {
+  //   const roomsJoined = Array.from(socket.rooms).filter((room) => room !== socket.id);
+  //   const roomCode = roomsJoined[0];
+  
+  //   if (!roomCode) return;
+  
+  //   socket.to(roomCode).emit('user-joined', { name, role });
+  // });
+  
 
   socket.on('disconnect', () => {
     console.log(`Socket disconnected: ${socket.id}`);
