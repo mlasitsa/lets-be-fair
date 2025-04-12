@@ -28,6 +28,10 @@ export function useSocket(
       socket.emit('join-room', { roomCode, name });
     }
 
+    // socket.on('error', (errorMessage) => {
+    //   setError(errorMessage)
+    // })
+
     socket.on('session-started', (data) => {
         setData(data);
     })

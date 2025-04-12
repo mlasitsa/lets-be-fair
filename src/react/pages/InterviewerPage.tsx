@@ -16,9 +16,9 @@ const IntervieweePage = () => {
     code: '',
   });
 
-  const [isSessionStarted, setIsSessionStarted] = useState(false);
-  const [isInterviewer, setIsInterviewer] = useState(true);
-  
+  const [isSessionStarted, setIsSessionStarted] = useState<boolean>(false);
+  const [isInterviewer, setIsInterviewer] = useState<boolean>(true);
+  const [error, setError] = useState<boolean>(false)
 
   return (
     <div>
@@ -28,7 +28,9 @@ const IntervieweePage = () => {
         setData={setInterviewer}
         code={interviewer.code}
         info={interviewer}
+        setError={setError}
       /> 
+      {error && <span>This code is already exist, please create a different code</span>}
     </div>
   );
 };

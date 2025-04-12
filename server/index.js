@@ -28,7 +28,6 @@ io.on('connection', (socket) => {
 
   socket.on('join-room', ({ name, roomCode }) => {
     if (!rooms[roomCode]) {
-      socket.emit('error', 'Room does not exist');
       return;
     }
 
@@ -60,6 +59,22 @@ io.on('connection', (socket) => {
     //   }
     // }
   });
+
+  socket.on("checkRoom", ({code, isInterviewer}) => {
+    if (isInterviewer) {
+      if (!roomCode[code]) {
+        socket.emit('checkRoom-interviewer', true)
+      } else {
+        socket.emit('checkRoom-interviewer', false)
+      }
+    } else {
+      if (!roomCode[code]) {
+        socket.emit('checkRoom-interviewee' , false)
+      } else {
+        socket.emit('checkRoom-interviewee', true)
+      }
+    }
+  })
 
   // socket.on('process-update', ({ roomCode, data }) => {
   //   if (!rooms[roomCode]) return;

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { z } from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {io, Socket} from 'socket.io-client'
+import useValidateRoom from '../hooks/validateRoomSocket';
 
 
 const ipcRenderer = window.require?.('electron')?.ipcRenderer;
@@ -27,6 +29,7 @@ type SignUpFormProps = {
   setData: React.Dispatch<React.SetStateAction<CandidateData>>;
   code: number | string;
   info?: any;
+  setError: any // QUESTIONS HERE  (CFIGURE OUR PROPS PASSING AND LIFTINGS OF STATES)
 };
 
 const SignUpForm = ({ isInterviewer, page, setData, code, info }: SignUpFormProps) => {
@@ -38,6 +41,8 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info }: SignUpFormProp
   const navigate = useNavigate(); 
 
   const onSubmit = (data: userData) => {
+    
+
 
     console.log(data)
     setData(data)
