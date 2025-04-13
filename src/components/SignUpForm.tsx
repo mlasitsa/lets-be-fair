@@ -33,7 +33,7 @@ type SignUpFormProps = {
 
 const SignUpForm = ({ isInterviewer, page, setData, code, info}: SignUpFormProps) => {
 
-  const [error, setError] = useState<boolean>(isInterviewer)
+  const [error, setError] = useState<boolean>(true)
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<userData>({
     mode: "onChange",
@@ -43,10 +43,10 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info}: SignUpFormProps
   const navigate = useNavigate(); 
 
   const onSubmit = (data: userData) => {
-    
     validateRoom({
-      code,
+      code: data.code,
       isInterviewer, 
+      name: `${data.firstName} ${data.lastName}`,
       setRoomExist: setError,
       onSuccess: () => {
         setData(data)
@@ -59,14 +59,14 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info}: SignUpFormProps
     if (isInterviewer) {
       navigate(`/room/${data.code}`, {
         state: {
-          info: info,
+          info: "hello",
           isInterviewer: isInterviewer,
         }
       }); 
     } else {
       navigate(`/room/${data.code}`, {
         state: {
-          info: info,
+          info: "hello",
           isInterviewer: isInterviewer,
         }
       })
@@ -142,7 +142,7 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info}: SignUpFormProps
             This code is already exist, please create a different code
           </span>)
           :
-          ( error &&
+          ( !error &&
           <span>
             There is no active room with this code, please check with your interviewer
           </span>

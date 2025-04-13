@@ -20,9 +20,6 @@ io.on('connection', (socket) => {
 
   socket.on('create-room', ({ name, roomCode }) => {
     socket.join(roomCode); 
-    rooms[roomCode] = {
-      interviewer: { socketId: socket.id, name }
-    };
     console.log(`Interviewer ${name} created and joined room ${roomCode}`);
   });
 
@@ -32,7 +29,6 @@ io.on('connection', (socket) => {
     }
 
     socket.join(roomCode);
-    rooms[roomCode].candidate = { socketId: socket.id, name };
     console.log(`Candidate ${name} joined room ${roomCode}`);
 
     const interviewer = rooms[roomCode].interviewer.name;
@@ -60,18 +56,25 @@ io.on('connection', (socket) => {
     // }
   });
 
-  socket.on("checkRoom", ({code, isInterviewer}) => {
+  socket.on("checkRoom", ({code, isInterviewer, name}) => {
+    console.log(rooms)
+    console.log('Code is', code)
     if (isInterviewer) {
       if (!rooms[code]) {
-        socket.emit('checkRoom-interviewer', true)
+        socket.emit('checkRoom-interviewer', true)   // Room is open and can be created
+        rooms[code] = {
+          interviewer: { socketId: socket.id, name },
+          candidate: {}
+        };
       } else {
-        socket.emit('checkRoom-interviewer', false)
+        socket.emit('checkRoom-interviewer', false)  // Room is taken and cannot be created
       }
     } else {
-      if (!rooms[code]) {
-        socket.emit('checkRoom-interviewee' , false)
+      if (rooms[code]) {
+        socket.emit('checkRoom-interviewee', true); // Room exists — candidate can join
+        rooms[code].candidate = { socketId: socket.id, name };
       } else {
-        socket.emit('checkRoom-interviewee', true)
+        socket.emit('checkRoom-interviewee', false); // Room does not exist — can't join
       }
     }
   })
