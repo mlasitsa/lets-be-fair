@@ -16,14 +16,12 @@ const IntervieweePage = () => {
     code: '',
   });
 
-  const [isSessionStarted, setIsSessionStarted] = useState(false);
-  const [isInterviewer, setIsInterviewer] = useState(true);
-  
+  const [isSessionStarted, setIsSessionStarted] = useState<boolean>(false);
 
   return (
     <div>
       <SignUpForm
-        isInterviewer={isInterviewer}
+        isInterviewer={true}
         page="Interviewer Page"
         setData={setInterviewer}
         code={interviewer.code}

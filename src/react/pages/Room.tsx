@@ -6,6 +6,13 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+// Okay so here I think I need to get rid of useLocation and this of another way I can pass data, probably should be able
+// to extract this data from our server since we already have it there -> so I would need to make some changes to my hook
+// But I think I will still have to pass somehow, interviewer or interviewee, maybe I can just do it through query ???
+// If so, then how can I protect it from a random person to do this ??? -> in the future I guess I can use auth for this
+// and handle it there ??? Might need to do some research, I think what I can also do is to add isInterviewer var to my
+// server in the socket, so we can also just get it from our server too and display everything properly ???
+// I think I will do it this way
 
 
 const Room = () => {
@@ -13,7 +20,7 @@ const Room = () => {
     const location = useLocation();
     const {info, isInterviewer } = location.state;
     const [data, setData] = useState<{ interviewer: string, interviewee: string } | null>(null);
-    console.log(info)
+    console.log('Your info is',info)
     console.log(isInterviewer)
     const navigate = useNavigate()
 
@@ -34,17 +41,6 @@ const Room = () => {
         roomCode: info.code,
         name: `${info.firstName} ${info.lastName}`,
         setData: setData,
-        // onPeerJoined: (peerInfo) => {
-        //   setPeer(peerInfo);
-        // },
-        // onSessionStart: ({ interviewer, candidate }) => {
-        //     setInterviwerr(interviewer);
-        //     setCandidate(candidate);
-        //   console.log(`Session started with: ${interviewer} and ${candidate}`);
-        // },
-        // onCandidateData: (data) => {
-        //   console.log('Received candidate process data:', data);
-        // }
       });
 return (
         <div className='bg-[#C0D8DD]'>
