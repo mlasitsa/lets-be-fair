@@ -4,10 +4,12 @@ import InterviewerPage from './pages/InterviewerPage';
 import IntervieweePage from './pages/IntervieweePage';
 import StartPage from './pages/StartPage';
 import Room from './pages/Room';
+import { RoleProvider } from '../hooks/contextState';
 
 
 function App() {
   return (
+    <RoleProvider>
     <Router>
       <Routes>
         <Route path="/interviewer" element={<InterviewerPage />} />
@@ -16,6 +18,7 @@ function App() {
         <Route path="/room/:roomCode" element={<Room />} />
       </Routes>
     </Router>
+    </RoleProvider>
   );
 }
 

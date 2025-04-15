@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {io, Socket} from 'socket.io-client'
 import validateRoom from '../hooks/validateRoomSocket';
+import { useRole } from '../hooks/contextState';
 
 
 const ipcRenderer = window.require?.('electron')?.ipcRenderer;
@@ -34,6 +35,7 @@ type SignUpFormProps = {
 const SignUpForm = ({ isInterviewer, page, setData, code, info}: SignUpFormProps) => {
 
   const [error, setError] = useState<boolean>(true)
+  const { setIsInterviewer } = useRole();
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<userData>({
     mode: "onChange",
@@ -57,8 +59,10 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info}: SignUpFormProps
       }
     
     if (isInterviewer) {
+      setIsInterviewer(true)
       navigate(`/room/${data.code}`); 
     } else {
+      setIsInterviewer(false)
       navigate(`/room/${data.code}`)
     }
       }
