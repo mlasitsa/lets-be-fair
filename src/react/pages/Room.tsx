@@ -17,11 +17,8 @@ import { useNavigate } from 'react-router-dom';
 
 const Room = () => {
 
-    const location = useLocation();
-    const {info, isInterviewer } = location.state;
+    const { roomCode } = useParams()
     const [data, setData] = useState<{ interviewer: string, interviewee: string } | null>(null);
-    console.log('Your info is',info)
-    console.log(isInterviewer)
     const navigate = useNavigate()
 
     const goBack = () => {

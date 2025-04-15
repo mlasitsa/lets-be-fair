@@ -57,19 +57,9 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info}: SignUpFormProps
       }
     
     if (isInterviewer) {
-      navigate(`/room/${data.code}`, {
-        state: {
-          info: "hello",
-          isInterviewer: isInterviewer,
-        }
-      }); 
+      navigate(`/room/${data.code}`); 
     } else {
-      navigate(`/room/${data.code}`, {
-        state: {
-          info: "hello",
-          isInterviewer: isInterviewer,
-        }
-      })
+      navigate(`/room/${data.code}`)
     }
       }
     })   
