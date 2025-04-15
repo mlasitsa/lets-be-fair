@@ -5,6 +5,7 @@ import { useSocket } from '../../hooks/useSocket';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRole } from '../../context/contextState';
 
 // Okay so here I think I need to get rid of useLocation and this of another way I can pass data, probably should be able
 // to extract this data from our server since we already have it there -> so I would need to make some changes to my hook
@@ -17,11 +18,9 @@ import { useNavigate } from 'react-router-dom';
 
 const Room = () => {
 
-    const location = useLocation();
-    const {info, isInterviewer } = location.state;
+    const { roomCode } = useParams()
+    const { isInterviewer } = useRole();
     const [data, setData] = useState<{ interviewer: string, interviewee: string } | null>(null);
-    console.log('Your info is',info)
-    console.log(isInterviewer)
     const navigate = useNavigate()
 
     const goBack = () => {
@@ -36,15 +35,15 @@ const Room = () => {
       console.log('Data updated:', data);
     }, [data]);
 
-    useSocket({
-        role: isInterviewer,
-        roomCode: info.code,
-        name: `${info.firstName} ${info.lastName}`,
-        setData: setData,
-      });
+    // useSocket({
+    //     role: isInterviewer,
+    //     roomCode: info.code,
+    //     name: `${info.firstName} ${info.lastName}`,
+    //     setData: setData,
+    //   });
 return (
         <div className='bg-[#C0D8DD]'>
-          <div>Room Code: {info.code}</div>
+          <div>Room Code: {roomCode}</div>
           {isInterviewer ?
           <>
           <div>Interviewer Page</div>
