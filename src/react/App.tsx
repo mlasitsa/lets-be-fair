@@ -4,7 +4,7 @@ import InterviewerPage from './pages/InterviewerPage';
 import IntervieweePage from './pages/IntervieweePage';
 import StartPage from './pages/StartPage';
 import Room from './pages/Room';
-import { RoleProvider } from '../hooks/contextState';
+import { RoleProvider } from '../context/contextState';
 
 
 function App() {

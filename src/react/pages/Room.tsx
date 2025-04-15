@@ -5,7 +5,7 @@ import { useSocket } from '../../hooks/useSocket';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRole } from '../../hooks/contextState';
+import { useRole } from '../../context/contextState';
 
 // Okay so here I think I need to get rid of useLocation and this of another way I can pass data, probably should be able
 // to extract this data from our server since we already have it there -> so I would need to make some changes to my hook

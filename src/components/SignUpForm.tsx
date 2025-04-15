@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {io, Socket} from 'socket.io-client'
 import validateRoom from '../hooks/validateRoomSocket';
-import { useRole } from '../hooks/contextState';
+import { useRole } from '../context/contextState';
 
 
 const ipcRenderer = window.require?.('electron')?.ipcRenderer;
