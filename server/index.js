@@ -18,42 +18,28 @@ const rooms = {};
 io.on('connection', (socket) => {
   console.log(`Socket connected: ${socket.id}`);
 
-  socket.on('create-room', ({ name, roomCode }) => {
-    socket.join(roomCode); 
-    console.log(`Interviewer ${name} created and joined room ${roomCode}`);
-  });
-
-  socket.on('join-room', ({ name, roomCode }) => {
-    if (!rooms[roomCode]) {
-      return;
-    }
-
+  socket.on('data-connection', ({ roomCode }) => {
     socket.join(roomCode);
-    console.log(`Candidate ${name} joined room ${roomCode}`);
 
-    const interviewer = rooms[roomCode].interviewer.name;
-    console.log("Hello from server:", interviewer)
-    const interviewee = rooms[roomCode].candidate.name;
-    console.log("Hello from server:", interviewee)
+    if (rooms[roomCode]) {
+      console.log(`Establishing connection for room number: ${roomCode}`);
 
-    if (interviewer && interviewee) {
-      io.to(roomCode).emit('session-started', {
-        interviewer: interviewer,
-        interviewee: interviewee
-      })
-    }
-    // if (interviewer) {
-    //   socket.emit("user-joined", {
-    //     name: interviewer.name,
-    //     role: true
-    //   })
-    //   if (interviewer && interviewee) {
-    //     io.to(roomCode).emit('session-started', {
-    //       interviewer: interviewer.name,
-    //       candidate: interviewee
-    //     });
-    //   }
-    // }
+      const interviewer = rooms[roomCode].interviewer.name
+      const candidate = rooms[roomCode].candidate.name 
+      console.log(`Interviewer is: ${interviewer}`)
+      console.log(`Candidates is: ${candidate}`)
+      console.log("Emitting session-started for room", roomCode, rooms[roomCode]);
+      const data = rooms[roomCode]
+      console.log('data is:', data)
+
+      if (interviewer && candidate) {
+        io.emit('session-started', {data: data})
+      }
+      
+      
+      
+
+    } 
   });
 
   socket.on("checkRoom", ({code, isInterviewer, name}) => {
@@ -62,6 +48,7 @@ io.on('connection', (socket) => {
     if (isInterviewer) {
       if (!rooms[code]) {
         socket.emit('checkRoom-interviewer', true)   // Room is open and can be created
+        socket.join(code)
         rooms[code] = {
           interviewer: { socketId: socket.id, name },
           candidate: {}
@@ -72,7 +59,8 @@ io.on('connection', (socket) => {
     } else {
       if (rooms[code]) {
         socket.emit('checkRoom-interviewee', true); // Room exists — candidate can join
-        rooms[code].candidate = { socketId: socket.id, name };
+        rooms[code].candidate = { socketId: socket.id, name, applications: undefined };
+        socket.join(code)
       } else {
         socket.emit('checkRoom-interviewee', false); // Room does not exist — can't join
       }

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useRole } from '../../context/contextState';
+import { useRef } from 'react';
 
 // Okay so here I think I need to get rid of useLocation and this of another way I can pass data, probably should be able
 // to extract this data from our server since we already have it there -> so I would need to make some changes to my hook
@@ -15,12 +16,17 @@ import { useRole } from '../../context/contextState';
 // server in the socket, so we can also just get it from our server too and display everything properly ???
 // I think I will do it this way
 
+interface Candidates {
+  interviewer: {name: string}
+  candidate: {name: string, apps: any}
+}
 
 const Room = () => {
 
     const { roomCode } = useParams()
     const { isInterviewer } = useRole();
-    const [data, setData] = useState<{ interviewer: string, interviewee: string } | null>(null);
+    const code = roomCode ? roomCode : "None"
+    const [data, setData] = useState<any>(null);
     const navigate = useNavigate()
 
     const goBack = () => {
@@ -31,31 +37,36 @@ const Room = () => {
       }
     }
 
+    useSocket({
+        roomCode: code,
+        setData: setData
+      })
+   
+    
+
     useEffect(() => {
       console.log('Data updated:', data);
     }, [data]);
 
-    // useSocket({
-    //     role: isInterviewer,
-    //     roomCode: info.code,
-    //     name: `${info.firstName} ${info.lastName}`,
-    //     setData: setData,
-    //   });
 return (
         <div className='bg-[#C0D8DD]'>
           <div>Room Code: {roomCode}</div>
-          {isInterviewer ?
-          <>
-          <div>Interviewer Page</div>
-          <div>Candidate is: {data ? data.interviewee : "Waiting for candidate jo join..." }</div>
-          </>
-          :
-          
-          <>
-          <div>Interviewee Page</div>
-          <div> Your interviewer is: {data ? data.interviewer : "Waiting for interviewer to join..." }</div>
-          </>
-          }
+          {isInterviewer ? (
+            <>
+              <div>Interviewer Page</div>
+              <div>
+                Candidate is: {data?.candidate?.name ?? "Waiting for candidate to join..."}
+              </div>
+            </>
+          ) : (
+            <>
+              <div>Interviewee Page</div>
+              <div>
+                Your interviewer is: {data?.interviewer?.name ?? "Waiting for interviewer..."}
+              </div>
+            </>
+          )}
+
 
 
           <h1>If you think you have joined wrong session, you can always go back to previous form, to change your code</h1>
