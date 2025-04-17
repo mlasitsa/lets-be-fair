@@ -15,6 +15,7 @@ import { useRef } from 'react';
 // and handle it there ??? Might need to do some research, I think what I can also do is to add isInterviewer var to my
 // server in the socket, so we can also just get it from our server too and display everything properly ???
 // I think I will do it this way
+// Remove context, not proper use her for contex -> send isInterviewer param to the server
 
 interface Candidates {
   interviewer: {name: string}
@@ -24,13 +25,13 @@ interface Candidates {
 const Room = () => {
 
     const { roomCode } = useParams()
-    const { isInterviewer } = useRole();
+    // const { isInterviewer } = useRole();
     const code = roomCode ? roomCode : "None"
     const [data, setData] = useState<any>(null);
     const navigate = useNavigate()
 
     const goBack = () => {
-      if (isInterviewer) {
+      if (data?.interviewer?.isInterviewer) {
         navigate('/interviewer')
       } else {
         navigate('/interviewee')
@@ -51,7 +52,7 @@ const Room = () => {
 return (
         <div className='bg-[#C0D8DD]'>
           <div>Room Code: {roomCode}</div>
-          {isInterviewer ? (
+          {data?.interviewer?.isInterviewer ? (
             <>
               <div>Interviewer Page</div>
               <div>

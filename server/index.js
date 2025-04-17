@@ -50,7 +50,7 @@ io.on('connection', (socket) => {
         socket.emit('checkRoom-interviewer', true)   // Room is open and can be created
         socket.join(code)
         rooms[code] = {
-          interviewer: { socketId: socket.id, name },
+          interviewer: { socketId: socket.id, name: name, isInterviewer: isInterviewer },
           candidate: {}
         };
       } else {
@@ -59,7 +59,7 @@ io.on('connection', (socket) => {
     } else {
       if (rooms[code]) {
         socket.emit('checkRoom-interviewee', true); // Room exists — candidate can join
-        rooms[code].candidate = { socketId: socket.id, name, applications: undefined };
+        rooms[code].candidate = { socketId: socket.id, name: name, isInterviewer: isInterviewer, applications: undefined };
         socket.join(code)
       } else {
         socket.emit('checkRoom-interviewee', false); // Room does not exist — can't join
