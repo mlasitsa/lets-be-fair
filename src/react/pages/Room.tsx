@@ -25,9 +25,10 @@ interface Candidates {
 const Room = () => {
 
     const { roomCode } = useParams()
-    // const { isInterviewer } = useRole();
+    // const { isInterviewer: roleMode } = useRole();
     const code = roomCode ? roomCode : "None"
     const [data, setData] = useState<any>(null);
+    const [isInterviewer, setIsInterviewer] = useState<boolean | null>(null)
     const navigate = useNavigate()
 
     const goBack = () => {
@@ -40,19 +41,26 @@ const Room = () => {
 
     useSocket({
         roomCode: code,
-        setData: setData
+        setData: setData,
+        setIsInterviewer: setIsInterviewer
       })
    
     
 
     useEffect(() => {
       console.log('Data updated:', data);
-    }, [data]);
+      console.log("Is Interviewer", isInterviewer)
+    }, [data, isInterviewer]);
+
+    if (isInterviewer === null) {
+      return <span>Esatblishing connection...</span>
+    }
 
 return (
         <div className='bg-[#C0D8DD]'>
           <div>Room Code: {roomCode}</div>
-          {data?.interviewer?.isInterviewer ? (
+          
+          {isInterviewer ? (
             <>
               <div>Interviewer Page</div>
               <div>
