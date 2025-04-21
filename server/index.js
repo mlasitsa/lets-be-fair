@@ -54,6 +54,15 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('candidate-data', ({ processes, room }) => {
+    if (rooms[room]) {
+      rooms[room].candidate.applications = processes;
+      console.log("Received processes from candidate:", processes);
+  
+      io.to(room).emit('session-started', { data: rooms[room] });
+    }
+  });
+
   socket.on('data-connection', ({ roomCode }) => {
     socket.join(roomCode);
     console.log(`Socket ${socket.id} reconnected to room ${roomCode}`);

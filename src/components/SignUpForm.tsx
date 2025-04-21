@@ -55,7 +55,10 @@ const SignUpForm = ({ isInterviewer, page, setData, code, info}: SignUpFormProps
         console.log("Data from useForm Hooks", data)
 
     if (!isInterviewer && ipcRenderer) {
-        ipcRenderer.send("start-python", "interviewee");
+        ipcRenderer.send("start-python", {
+          role: 'interviewee',
+          roomCode: data.code
+        });
       }
     
     if (isInterviewer) {

@@ -22,6 +22,8 @@ interface Candidates {
   candidate: {name: string, apps: any}
 }
 
+type ProcessSnapshot = Record<string, [string, number]>;
+
 const Room = () => {
 
     const { roomCode } = useParams()
@@ -30,6 +32,18 @@ const Room = () => {
     const [data, setData] = useState<any>(null);
     const [isInterviewer, setIsInterviewer] = useState<boolean | null>(null)
     const navigate = useNavigate()
+    const [processes, setProcesses] = useState<ProcessSnapshot>({});
+
+    useEffect(() => {
+      const ipc = window.require('electron').ipcRenderer;
+
+      ipc.on('process-data', (_event:any, processes: any) => {
+        setProcesses(processes); 
+      });
+
+      return () => ipc.removeAllListeners('process-data');
+    }, []);
+
 
     const goBack = () => {
       if (data?.interviewer?.isInterviewer) {
@@ -50,31 +64,30 @@ const Room = () => {
     useEffect(() => {
       console.log('Data updated:', data);
       console.log("Is Interviewer", isInterviewer)
-    }, [data, isInterviewer]);
+    }, [data]);
 
-    if (isInterviewer === null) {
-      return <span>Esatblishing connection...</span>
-    }
 
 return (
         <div className='bg-[#C0D8DD]'>
+
           <div>Room Code: {roomCode}</div>
-          
-          {isInterviewer ? (
-            <>
-              <div>Interviewer Page</div>
-              <div>
+              <div className='font-bold'>
+                Interviewer is: {data?.interviewer?.name ?? "Waiting for interviewer..."}
+              </div>
+              <div className='font-bold'>
                 Candidate is: {data?.candidate?.name ?? "Waiting for candidate to join..."}
               </div>
-            </>
-          ) : (
-            <>
-              <div>Interviewee Page</div>
-              <div>
-                Your interviewer is: {data?.interviewer?.name ?? "Waiting for interviewer..."}
-              </div>
-            </>
-          )}
+
+              {Object.entries(processes).map(([name, [label, count]]) => (
+                <div key={name}>
+                  {label} | Running: {count}
+                </div>
+              ))}
+
+
+          
+            
+          
 
 
 
