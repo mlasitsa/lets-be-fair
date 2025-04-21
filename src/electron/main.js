@@ -2,9 +2,11 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path, { dirname } from 'path';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
+import { io } from 'socket.io-client';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const socket = io('http://localhost:3001');
 
 let mainWindow;
 
@@ -13,16 +15,15 @@ app.on('ready', () => {
     width: 1000,
     height: 800,
     webPreferences: {
-      nodeIntegration: true,           // OK for dev; for prod use preload + contextBridge
-      contextIsolation: false          // Must be false to use ipcRenderer in React for now
+      nodeIntegration: true,
+      contextIsolation: false
     }
   });
 
   mainWindow.loadFile(path.join(app.getAppPath(), 'dist-react/index.html'));
 
-  // 🔌 Listen for role from React via ipcRenderer
-  ipcMain.on('start-python', (event, role) => {
-    console.log("📥 Received role from React:", role);
+  ipcMain.on('start-python', (event, { role, roomCode }) => {
+    console.log("Received ROLE and ROOM from React:", role, roomCode);
 
     if (role === 'interviewee') {
       const scriptPath = path.join(__dirname, 'stream_processes.py');
@@ -30,18 +31,20 @@ app.on('ready', () => {
 
       child.stdout.on('data', (data) => {
         const output = data.toString();
-        console.log("🟢 Python output:", output);
+        console.log("Python output:", output);
 
-        // Optional: forward data to frontend (React) via IPC
-        mainWindow.webContents.send('process-data', JSON.parse(output));
+        const parsed = JSON.parse(output); 
+        console.log(parsed)
+
+        socket.emit('candidate-data', { processes: parsed, room: roomCode }); 
       });
 
       child.stderr.on('data', (err) => {
-        console.error("❌ Python error:", err.toString());
+        console.error("Python error:", err.toString());
       });
 
       child.on('exit', (code) => {
-        console.log(`🛑 Python script exited with code ${code}`);
+        console.log(`Python script exited with code ${code}`);
       });
     }
   });
