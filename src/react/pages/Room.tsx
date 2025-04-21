@@ -18,8 +18,8 @@ import { useRef } from 'react';
 // Remove context, not proper use her for contex -> send isInterviewer param to the server
 
 interface Candidates {
-  interviewer: {name: string}
-  candidate: {name: string, apps: any}
+  interviewer: {socketId: string, name: string, role:string}
+  candidate: {socketId: string, name: string, role:string, applications: ProcessSnapshot}
 }
 
 type ProcessSnapshot = Record<string, [string, number]>;
@@ -29,29 +29,21 @@ const Room = () => {
     const { roomCode } = useParams()
     // const { isInterviewer: roleMode } = useRole();
     const code = roomCode ? roomCode : "None"
-    const [data, setData] = useState<any>(null);
+    const [data, setData] = useState<Candidates | null>(null);
     const [isInterviewer, setIsInterviewer] = useState<boolean | null>(null)
     const navigate = useNavigate()
     const [processes, setProcesses] = useState<ProcessSnapshot>({});
 
-    useEffect(() => {
-      const ipc = window.require('electron').ipcRenderer;
+    // useEffect(() => {
+    //   const ipc = window.require('electron').ipcRenderer;
 
-      ipc.on('process-data', (_event:any, processes: any) => {
-        setProcesses(processes); 
-      });
+    //   ipc.on('process-data', (_event:any, processes: any) => {
+    //     setProcesses(processes); 
+    //   });
 
-      return () => ipc.removeAllListeners('process-data');
-    }, []);
+    //   return () => ipc.removeAllListeners('process-data');
+    // }, []);
 
-
-    const goBack = () => {
-      if (data?.interviewer?.isInterviewer) {
-        navigate('/interviewer')
-      } else {
-        navigate('/interviewee')
-      }
-    }
 
     useSocket({
         roomCode: code,
@@ -78,21 +70,17 @@ return (
                 Candidate is: {data?.candidate?.name ?? "Waiting for candidate to join..."}
               </div>
 
-              {Object.entries(processes).map(([name, [label, count]]) => (
+              {data?.candidate.applications ? 
+              
+              Object.entries(data.candidate.applications).map(([name, [label, count]]) => (
                 <div key={name}>
                   {label} | Running: {count}
                 </div>
-              ))}
+              ))
+              
+              : <h1>Waiting for data to load...</h1>}
+              
 
-
-          
-            
-          
-
-
-
-          <h1>If you think you have joined wrong session, you can always go back to previous form, to change your code</h1>
-          <button onClick={goBack}>Back to Form</button>
         </div>
       );
   
