@@ -1,21 +1,11 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 import { useSocket } from '../../hooks/useSocket';
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRole } from '../../context/contextState';
-import { useRef } from 'react';
-
-// Okay so here I think I need to get rid of useLocation and this of another way I can pass data, probably should be able
-// to extract this data from our server since we already have it there -> so I would need to make some changes to my hook
-// But I think I will still have to pass somehow, interviewer or interviewee, maybe I can just do it through query ???
-// If so, then how can I protect it from a random person to do this ??? -> in the future I guess I can use auth for this
-// and handle it there ??? Might need to do some research, I think what I can also do is to add isInterviewer var to my
-// server in the socket, so we can also just get it from our server too and display everything properly ???
-// I think I will do it this way
-// Remove context, not proper use her for contex -> send isInterviewer param to the server
+import MonacoEditor from 'react-monaco-editor';
+// import { useRole } from '../../context/contextState';
+// import { useRef } from 'react';
 
 interface Candidates {
   interviewer: {socketId: string, name: string, role:string}
@@ -79,6 +69,18 @@ return (
               ))
               
               : <h1>Waiting for data to load...</h1>}
+
+              <div className='flex justify-center m-10'>
+              <MonacoEditor 
+              width={600}
+              height={800}
+              theme={'vs-dark'}
+              language="python"
+              options={{
+                lineNumbers: 'on',
+                lineNumbersMinChars: 3,
+              }}/>
+              </div>
               
 
         </div>
