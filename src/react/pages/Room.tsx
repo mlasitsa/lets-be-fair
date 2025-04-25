@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MonacoEditor from 'react-monaco-editor';
 import CodeEditor from '../../components/CodeEditor';
+import CodeCard from '../../components/CodeCard';
 // import { useRole } from '../../context/contextState';
 // import { useRef } from 'react';
 
@@ -16,7 +17,22 @@ interface Candidates {
 type ProcessSnapshot = Record<string, [string, number]>;
 
 const Room = () => {
-
+    const examples = [{
+      num: 1,
+      input: '1, 2, 3, 4',
+      output: '3'
+    },
+    {
+      num: 2,
+      input: '1, 3, 4',
+      output: '10'
+    },
+    {
+      num: 3,
+      input: '1, 3, 3, 4',
+      output: '5'
+    }
+  ]
     const { roomCode } = useParams()
     // const { isInterviewer: roleMode } = useRole();
     const code = roomCode ? roomCode : "None"
@@ -72,9 +88,11 @@ return (
               : <h1>Waiting for data to load...</h1>}
 
               <div className='flex flex-row justify-center m-10 gap-5'>
-                <div className='bg-white w-auto'>
-                  
-                </div>
+                <CodeCard 
+                  CardTitle='House Robber II' 
+                  CardDescription='Given number of that, please provide this that and that'
+                  CardConstraints={["array wont be empty", "num will exist"]}
+                  CardExamples={examples}/>
                 <CodeEditor />
                 <div>
 
