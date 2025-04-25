@@ -87,16 +87,14 @@ return (
               
               : <h1>Waiting for data to load...</h1>}
 
-              <div className='flex flex-row justify-center m-10 gap-5'>
+              <div className='flex flex-row justify-center mt-10 gap-5'>
                 <CodeCard 
                   CardTitle='House Robber II' 
-                  CardDescription='Given number of that, please provide this that and that'
+                  CardDescription='Given number of that, please provide this that and that fgfdgdf gssdsfsd fsdfsdfsd ffsdfsfs dssdv gsdf, sfsdf '
                   CardConstraints={["array wont be empty", "num will exist"]}
                   CardExamples={examples}/>
                 <CodeEditor />
-                <div>
-
-                </div>
+                {/*Make a pop up display here on submit that can be closed, shold be like a layover everything*/}
               </div>
               
 
