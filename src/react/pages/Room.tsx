@@ -4,6 +4,7 @@ import { useSocket } from '../../hooks/useSocket';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MonacoEditor from 'react-monaco-editor';
+import CodeEditor from '../../components/CodeEditor';
 // import { useRole } from '../../context/contextState';
 // import { useRef } from 'react';
 
@@ -70,16 +71,14 @@ return (
               
               : <h1>Waiting for data to load...</h1>}
 
-              <div className='flex justify-center m-10'>
-              <MonacoEditor 
-              width={600}
-              height={800}
-              theme={'vs-dark'}
-              language="python"
-              options={{
-                lineNumbers: 'on',
-                lineNumbersMinChars: 3,
-              }}/>
+              <div className='flex flex-row justify-center m-10 gap-5'>
+                <div className='bg-white w-auto'>
+                  
+                </div>
+                <CodeEditor />
+                <div>
+
+                </div>
               </div>
               
 
