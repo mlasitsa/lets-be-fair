@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import MonacoEditor from 'react-monaco-editor';
 import CodeEditor from '../../components/CodeEditor';
 import CodeCard from '../../components/CodeCard';
+import Popverbutton from '../../components/ui/popverbutton';
+import Dropdown from '../../components/ui/dropdown';
 // import { useRole } from '../../context/contextState';
 // import { useRef } from 'react';
 
@@ -69,15 +71,42 @@ const Room = () => {
 return (
         <div className='bg-[#C0D8DD]'>
 
-          <div>Room Code: {roomCode}</div>
-              <div className='font-bold'>
-                Interviewer is: {data?.interviewer?.name ?? "Waiting for interviewer..."}
+          <div className='flex flex-row justify-between mx-40'>
+            <div className='flex flex-col items-start'>
+              <div><span className='font-bold'>Room Code:</span> {roomCode}</div>
+              <div>
+                <span className='font-bold'>Interviewer is:</span> {data?.interviewer?.name ?? "Waiting for interviewer..."}
               </div>
-              <div className='font-bold'>
-                Candidate is: {data?.candidate?.name ?? "Waiting for candidate to join..."}
+              <div>
+                <span className='font-bold'>Candidate is:</span> {data?.candidate?.name ?? "Waiting for candidate to join..."}
               </div>
+            </div>
 
-              {data?.candidate.applications ? 
+          <div className='flex flex-col gap-5'>
+            <div className='flex flex-row gap-10'>
+              <Popverbutton 
+              text="Proccesses"
+              data={"hello"} />
+              <Popverbutton 
+              text="Connectors"
+              data={"No Data"} />
+              <Popverbutton 
+              text="AI Notes"
+              data={"bla bla bla, he is valid guy I think he is handsome"} />
+            </div>
+            
+            <div className='flex flex-row gap-10'>
+            <Dropdown />
+            <Popverbutton 
+              text="Submit"
+              data={"hello"} />
+            </div>
+            
+          </div>
+          </div>
+        
+
+             {data?.candidate.applications ? 
               
               Object.entries(data.candidate.applications).map(([name, [label, count]]) => (
                 <div key={name}>
