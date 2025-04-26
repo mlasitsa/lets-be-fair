@@ -43,17 +43,6 @@ const Room = () => {
     const navigate = useNavigate()
     const [processes, setProcesses] = useState<ProcessSnapshot>({});
 
-    // useEffect(() => {
-    //   const ipc = window.require('electron').ipcRenderer;
-
-    //   ipc.on('process-data', (_event:any, processes: any) => {
-    //     setProcesses(processes); 
-    //   });
-
-    //   return () => ipc.removeAllListeners('process-data');
-    // }, []);
-
-
     useSocket({
         roomCode: code,
         setData: setData,
@@ -82,7 +71,6 @@ return (
               </div>
             </div>
 
-          <div className='flex flex-col gap-5'>
             <div className='flex flex-row gap-10'>
               <Popverbutton 
               text="Proccesses"
@@ -94,19 +82,10 @@ return (
               text="AI Notes"
               data={"bla bla bla, he is valid guy I think he is handsome"} />
             </div>
-            
-            <div className='flex flex-row gap-10'>
-            <Dropdown />
-            <Popverbutton 
-              text="Submit"
-              data={"hello"} />
-            </div>
-            
-          </div>
           </div>
         
 
-             {data?.candidate.applications ? 
+             {/* {data?.candidate.applications ? 
               
               Object.entries(data.candidate.applications).map(([name, [label, count]]) => (
                 <div key={name}>
@@ -114,7 +93,7 @@ return (
                 </div>
               ))
               
-              : <h1>Waiting for data to load...</h1>}
+              : <h1>Waiting for data to load...</h1>} */}
 
               <div className='flex flex-row justify-center mt-10 gap-5'>
                 <CodeCard 
