@@ -1,6 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface LanguageModel {
     language: string,
@@ -8,15 +8,17 @@ interface LanguageModel {
 }
 interface DropDownProps {
     name: string,
-    options: LanguageModel[]
+    options: LanguageModel[],
+    setValue: (val: string) => void 
 }
 
-const Dropdown = ({name = 'Options', options}: DropDownProps) => {
+const Dropdown = ({name = 'Options', options, setValue}: DropDownProps) => {
     const [language, setLanguage] = useState<string>('')
 
 
-    const setValue = (item: string) => {
-        setLanguage(item)
+    const selectLanguage = (item: LanguageModel) => {
+        setLanguage(item.language)
+        setValue(item.value)
     }
 
   return (
@@ -35,7 +37,7 @@ const Dropdown = ({name = 'Options', options}: DropDownProps) => {
             <MenuItem>
         <div className={
         `block px-4 py-2 text-sm hover:bg-gray-200 ${item.language === language ? 'text-blue-700 font-bold': 'text-gray-700'}`}
-            onClick={() => setValue(item.language)}>
+            onClick={() => selectLanguage(item)}>
             {item.language}
           </div>
           </MenuItem>

@@ -42,6 +42,7 @@ const Room = () => {
     const [isInterviewer, setIsInterviewer] = useState<boolean | null>(null)
     const navigate = useNavigate()
     const [processes, setProcesses] = useState<ProcessSnapshot>({});
+    const [newProcesses, setNewProcesses] = useState<string[]>([])
 
     useSocket({
         roomCode: code,
@@ -56,6 +57,14 @@ const Room = () => {
       console.log("Is Interviewer", isInterviewer)
     }, [data]);
 
+    useEffect(() => {
+      if (data?.candidate.applications) {
+        Object.entries(data.candidate.applications).map(([name, [label, count]]) => (
+          setNewProcesses([...newProcesses, label])
+        ))
+      }
+    },[data?.candidate.applications])
+    
 
 return (
         <div className='bg-[#C0D8DD]'>
@@ -74,7 +83,7 @@ return (
             <div className='flex flex-row gap-10'>
               <Popverbutton 
               text="Proccesses"
-              data={"hello"} />
+              data={newProcesses} />
               <Popverbutton 
               text="Connectors"
               data={"No Data"} />
