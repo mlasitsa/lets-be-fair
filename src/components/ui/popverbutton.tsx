@@ -1,14 +1,16 @@
 import React, { use } from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface popverProps {
     text: string,
     data: any
 }
 
-const Popverbutton = ({text, data} : popverProps) => {
+const Popverbutton = ({text, data = "Nothing to show"} : popverProps) => {
 
     const [show, setShow] = useState<boolean>(false)
+
+
   return (
     <div className='relative inline-block'>
     <button data-ripple-light="true" data-popover-target="popover" onClick={() => setShow((prev) => !prev)}
@@ -18,7 +20,7 @@ const Popverbutton = ({text, data} : popverProps) => {
     
     {show && <div data-popover="popover"
         className="absolute left-1/2 transform -translate-x-1/2 mt-2 p-4 z-50 font-sans text-sm font-normal whitespace-normal bg-white border rounded-lg shadow-lg w-max border-blue-gray-50 text-blue-gray-500 shadow-blue-gray-500/10 focus:outline-none">
-        {data}
+        {Array.isArray(data) ? data.map((item: any ) => (item)): data}
     </div> }
     </div>
   )
