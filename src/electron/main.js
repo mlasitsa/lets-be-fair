@@ -4,48 +4,59 @@ import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import { io } from 'socket.io-client';
 
+
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname  = dirname(__filename);
 const socket = io('http://localhost:3001');
 
 let mainWindow;
 
-app.on('ready', () => {
+function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 1000,
+    width : 1000,
     height: 800,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false
+      nodeIntegration : false,                         // disable Node in renderer (look inot this)
+      contextIsolation: true,                          // isolate context (look into this)
+      preload        : path.join(__dirname, 'preload.js') // expose safe API (look into this)
     }
   });
 
   mainWindow.loadFile(path.join(app.getAppPath(), 'dist-react/index.html'));
+}
 
-  ipcMain.on('start-python', (event, { role, roomCode }) => {
-    console.log("Received ROLE and ROOM from React:", role, roomCode);
+app.whenReady().then(createWindow);
 
-    if (role === 'interviewee') {
-      const scriptPath = path.join(__dirname, 'stream_processes.py');
-      const child = spawn('python', [scriptPath]);
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') app.quit();
+});
 
-      child.stdout.on('data', (data) => {
-        const output = data.toString();
-        console.log("Python output:", output);
+app.on('activate', () => {
+  if (BrowserWindow.getAllWindows().length === 0) createWindow();
+});
 
-        const parsed = JSON.parse(output); 
-        console.log(parsed)
+ipcMain.on('start-python', (event, { role, roomCode }) => {
+  console.log('Received ROLE and ROOM from React:', role, roomCode);
 
-        socket.emit('candidate-data', { processes: parsed, room: roomCode }); 
-      });
+  if (role === 'interviewee') {
+    const scriptPath = path.join(__dirname, 'stream_processes.py');
+    const child = spawn('python', [scriptPath]);
 
-      child.stderr.on('data', (err) => {
-        console.error("Python error:", err.toString());
-      });
+    child.stdout.on('data', (data) => {
+      try {
+        const parsed = JSON.parse(data.toString());
+        socket.emit('candidate-data', { processes: parsed, room: roomCode });
+      } catch (e) {
+        console.error('Failed to parse Python JSON:', e);
+      }
+    });
 
-      child.on('exit', (code) => {
-        console.log(`Python script exited with code ${code}`);
-      });
-    }
-  });
+    child.stderr.on('data', (err) => {
+      console.error('Python error:', err.toString());
+    });
+
+    child.on('exit', (code) => {
+      console.log(`Python script exited with code ${code}`);
+    });
+  }
 });

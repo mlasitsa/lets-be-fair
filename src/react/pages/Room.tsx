@@ -59,11 +59,11 @@ const Room = () => {
 
     useEffect(() => {
       if (data?.candidate.applications) {
-        Object.entries(data.candidate.applications).map(([name, [label, count]]) => (
-          setNewProcesses([...newProcesses, label])
-        ))
+        const labels = Object.entries(data.candidate.applications).map(([name, [label, count]]) => label);
+        setNewProcesses((prev) => [...prev, ...labels]);
       }
-    },[data?.candidate.applications])
+    }, [data?.candidate.applications]);
+    
     
 
 return (
