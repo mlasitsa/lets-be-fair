@@ -110,7 +110,7 @@ return (
                   CardDescription='Given number of that, please provide this that and that fgfdgdf gssdsfsd fsdfsdfsd ffsdfsfs dssdv gsdf, sfsdf '
                   CardConstraints={["array wont be empty", "num will exist"]}
                   CardExamples={examples}/>
-                <CodeEditor />
+                <CodeEditor roomId={code}/>
                 {/*Make a pop up display here on submit that can be closed, shold be like a layover everything*/}
               </div>
               
