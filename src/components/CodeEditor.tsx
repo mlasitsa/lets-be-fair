@@ -3,14 +3,24 @@ import { Editor, loader } from '@monaco-editor/react';
 import Dropdown from './ui/dropdown';
 import languages from '../utils/languages';
 import { Button } from '@headlessui/react';
+import useBroadcast from '../hooks/useBroadcast';
 
 // Configure Monaco to load locally for Electron
 loader.config({
   paths: { vs: `file:///D:/GitHubPersonal/lets-be-fair/dist-react/monaco/vs` }
 });
 
-const CodeEditor = () => {
+const CodeEditor = ({roomId} :{roomId: any}) => {
   const [value, setValue] = useState<string>(`def helloWorld():\n\treturn "Hello World"\nhelloWorld()`);
+
+  window.console.log('Editor loaded and roomId is', roomId)
+
+
+  useBroadcast({
+    roomCode: roomId,
+    setCode: setValue,
+    value: value 
+  })
 
   const printValue = (val: string | undefined) => {
     if (val) {

@@ -26,6 +26,7 @@ io.on('connection', (socket) => {
         rooms[code] = {
           interviewer: { socketId: socket.id, name, role: 'interviewer' },
           candidate: null,
+          content: null
         };
         socket.emit('checkRoom-interviewer', true);
       } else {
@@ -81,6 +82,11 @@ io.on('connection', (socket) => {
         role,
       });
     }
+  });
+
+  socket.on('update-content', ({ roomId, content }) => {
+    console.log('I have received code as:', content)
+    socket.emit('update-code', ({ content }));
   });
 
   socket.on('disconnect', () => {
