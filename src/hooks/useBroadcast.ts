@@ -15,7 +15,7 @@ const useBroadcast = ({ roomCode, setCode, value }: useBroadCastData) => {
     socketRef.current = socket;
 
     socket.on('update-code', ({ content }) => {
-        console.log('CLIENT: this is the content I have and update:', content)
+        console.log('SOCKET: this is the content I have and update:', content)
       setCode(content);
     });
 

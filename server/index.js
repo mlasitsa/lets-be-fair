@@ -86,7 +86,8 @@ io.on('connection', (socket) => {
 
   socket.on('update-content', ({ roomId, content }) => {
     console.log('I have received code as:', content)
-    socket.emit('update-code', ({ content }));
+    socket.join(roomId)
+    socket.to(roomId).emit('update-code', { content });
   });
 
   socket.on('disconnect', () => {
