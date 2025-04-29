@@ -3,6 +3,10 @@ import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 
+// HERE I NEED TO FIGURE OUT
+// Why I need to join room 3 times for some reason (issues with listeners)
+// Why do I have this lag if I start spamming like !!!!!!!!!!!!!! (could it be listeners or is it a normal behavior)
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -47,7 +51,7 @@ io.on('connection', (socket) => {
       }
     }
 
-    // Emit session-started if both roles are filled
+    // Emit session-started if both roles are filled 
     const room = rooms[code];
     if (room?.interviewer && room?.candidate) {
       console.log("Emitting session-started to room", code, room);
