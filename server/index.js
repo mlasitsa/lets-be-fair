@@ -7,6 +7,7 @@ import cors from 'cors';
 // Why I need to join room 3 times for some reason (issues with listeners)
 // Why do I have this lag if I start spamming like !!!!!!!!!!!!!! (could it be listeners or is it a normal behavior)
 
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
