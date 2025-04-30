@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
           socketId: socket.id,
           role: 'interviewer'
         }
-        console.log(`Socket data is: ${socket.data}`)
+        console.log("Socket data is:", socket.data)
         rooms[code] = {
           interviewer: { socketId: socket.id, name, role: 'interviewer' },
           candidate: null,
@@ -60,6 +60,7 @@ io.on('connection', (socket) => {
           role: 'candidate',
           applications: undefined
         }
+        console.log('Socket data is:', socket.data)
         rooms[code].candidate = {
           socketId: socket.id,
           name,
