@@ -35,6 +35,15 @@ const validateRoom = ({ code, isInterviewer, name, setRoomExist, onSuccess }: Da
       }
     }
   });
+
+  // socket.on('user-left', (name) => {
+  //   setUserLeft(true)
+  // })
+
+  return () => {
+    socket.disconnect(); 
+  };
+
 };
 
 export default validateRoom;

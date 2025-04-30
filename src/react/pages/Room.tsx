@@ -8,6 +8,8 @@ import CodeEditor from '../../components/CodeEditor';
 import CodeCard from '../../components/CodeCard';
 import Popverbutton from '../../components/ui/popverbutton';
 import Dropdown from '../../components/ui/dropdown';
+import useConnectDisconect from '../../hooks/useConnectDisconect';
+import Popup from '../../components/ui/popup';
 // import { useRole } from '../../context/contextState';
 // import { useRef } from 'react';
 
@@ -43,15 +45,20 @@ const Room = () => {
     const navigate = useNavigate()
     const [processes, setProcesses] = useState<ProcessSnapshot>({});
     const [newProcesses, setNewProcesses] = useState<string[]>([])
+    const [userLeft, setUserLeft] = useState<boolean>(false)
+    const [userJoined, setUserJoined] = useState<boolean>(false)
 
     useSocket({
         roomCode: code,
         setData: setData,
         setIsInterviewer: setIsInterviewer
       })
-   
-    
 
+    useConnectDisconect({
+      setUserLeft: setUserLeft,
+      setUserJoined: setUserJoined
+    })
+   
     useEffect(() => {
       console.log('Data updated:', data);
       console.log("Is Interviewer", isInterviewer)
@@ -79,6 +86,9 @@ return (
                 <span className='font-bold'>Candidate is:</span> {data?.candidate?.name ?? "Waiting for candidate to join..."}
               </div>
             </div>
+
+            {userJoined && <Popup show={true} />}
+            {userLeft && <Popup show={userLeft} />}
 
             <div className='flex flex-row gap-10'>
               <Popverbutton 
