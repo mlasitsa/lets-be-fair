@@ -58,6 +58,9 @@ io.on('connection', (socket) => {
       console.log("Emitting session-started to room", code, room);
       io.to(code).emit('session-started', { data: room });
     }
+
+
+    
   });
 
   socket.on('candidate-data', ({ processes, room }) => {
