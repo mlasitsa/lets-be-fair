@@ -14,21 +14,24 @@ const useBroadcast = ({ roomCode, setCode, value }: useBroadCastData) => {
     const socket = io('http://localhost:3001');
     socketRef.current = socket;
 
-    socket.on('update-code', ({ content }) => {
-        console.log('SOCKET: this is the content I have and update:', content)
+    const handleUpdate = ({ content }: { content: any }) => {
+      console.log('SOCKET: this is the content I have and update:', content);
       setCode(content);
-    });
+    };
+
+    socket.on('update-code', handleUpdate);
 
     return () => {
-      socket.disconnect();
+      socket.off('update-code', handleUpdate);
+      socket.disconnect(); 
     };
-  }, [roomCode, setCode]);
+  }, []); 
 
   useEffect(() => {
     if (socketRef.current) {
       socketRef.current.emit('update-content', { roomId: roomCode, content: value });
     }
   }, [value, roomCode]);
-}
+};
 
 export default useBroadcast;

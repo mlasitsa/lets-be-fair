@@ -6,6 +6,8 @@ import cors from 'cors';
 // HERE I NEED TO FIGURE OUT
 // Why I need to join room 3 times for some reason (issues with listeners)
 // Why do I have this lag if I start spamming like !!!!!!!!!!!!!! (could it be listeners or is it a normal behavior)
+// Add notification on wher user Joins AND LEAVES
+// Clear data if user leaves from the server storage, but potentially add it to db before we clean up data from server
 
 
 const app = express();
@@ -100,6 +102,13 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log(`Socket disconnected: ${socket.id}`);
+  
+    // rooms = rooms.filter((room) => {
+    //   const interviewerId = room.interviewer?.socketId;
+    //   const candidateId = room.candidate?.socketId;
+  
+    //   return interviewerId !== socket.id && candidateId !== socket.id;
+    // });
   });
 });
 
@@ -107,3 +116,4 @@ const PORT = process.env.PORT || 3001;
 server.listen(PORT, () => {
   console.log(`Server listening on http://localhost:${PORT}`);
 });
+
