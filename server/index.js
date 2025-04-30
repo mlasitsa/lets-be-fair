@@ -1,14 +1,14 @@
-import express from 'express';
+import express, { application } from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
+import { log } from 'console';
 
 // HERE I NEED TO FIGURE OUT
 // Why I need to join room 3 times for some reason (issues with listeners)
 // Why do I have this lag if I start spamming like !!!!!!!!!!!!!! (could it be listeners or is it a normal behavior)
 // Add notification on wher user Joins AND LEAVES
 // Clear data if user leaves from the server storage, but potentially add it to db before we clean up data from server
-
 
 const app = express();
 const server = http.createServer(app);
@@ -30,18 +30,37 @@ io.on('connection', (socket) => {
     if (isInterviewer) {
       if (!rooms[code]) {
         socket.join(code);
+        // adding data to the socket data since it migth be usefull when we disconnecting
+        // maybe I can pass socket data rather than server hmap data
+        socket.data = {
+          code: code,
+          name: name,
+          socketId: socket.id,
+          role: 'interviewer'
+        }
+        console.log("Socket data is:", socket.data)
         rooms[code] = {
           interviewer: { socketId: socket.id, name, role: 'interviewer' },
           candidate: null,
           content: null
         };
         socket.emit('checkRoom-interviewer', true);
+        socket.emit('user-joined', socket.data.name)
       } else {
         socket.emit('checkRoom-interviewer', false);
       }
     } else {
       if (rooms[code]) {
         socket.join(code);
+        // adding data to socket data, since this might be usefull on disconnect ??? - this is candidate
+        socket.data = {
+          code: code,
+          name: name,
+          socketId: socket.id,
+          role: 'candidate',
+          applications: undefined
+        }
+        console.log('Socket data is:', socket.data)
         rooms[code].candidate = {
           socketId: socket.id,
           name,
@@ -49,6 +68,7 @@ io.on('connection', (socket) => {
           applications: undefined,
         };
         socket.emit('checkRoom-interviewee', true);
+        socket.emit('user-joined', socket.data.name)
       } else {
         socket.emit('checkRoom-interviewee', false);
       }
@@ -60,8 +80,6 @@ io.on('connection', (socket) => {
       console.log("Emitting session-started to room", code, room);
       io.to(code).emit('session-started', { data: room });
     }
-
-
     
   });
 
@@ -103,13 +121,22 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log(`Socket disconnected: ${socket.id}`);
   
-    // rooms = rooms.filter((room) => {
-    //   const interviewerId = room.interviewer?.socketId;
-    //   const candidateId = room.candidate?.socketId;
+    const code = socket.data?.code;
+    const isInterviewer = socket.data?.role === 'interviewer';
+    console.log(`Your roomCode is ${code} and isInterview is ${isInterviewer}`);
+    
   
-    //   return interviewerId !== socket.id && candidateId !== socket.id;
-    // });
+    if (!code) return; 
+  
+    if (isInterviewer) {
+      console.log(`Interviewer left room ${code}`);
+      socket.to(code).emit('user-left', socket.data.name)
+    } else {
+      console.log(`Candidate left room ${code}`);
+      socket.to(code).emit('user-left', socket.data.name)
+    }
   });
+
 });
 
 const PORT = process.env.PORT || 3001;
