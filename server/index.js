@@ -131,10 +131,13 @@ io.on('connection', (socket) => {
     if (isInterviewer) {
       console.log(`Interviewer left room ${code}`);
       socket.to(code).emit('user-left', socket.data.name)
+      // remove from room
     } else {
       console.log(`Candidate left room ${code}`);
       socket.to(code).emit('user-left', socket.data.name)
+      //remove from room
     }
+
   });
 
 });

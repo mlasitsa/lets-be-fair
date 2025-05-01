@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
+// @ts-ignore
+import socket from '../utils/socket.js'
 
 type useBroadCastData = {
   roomCode: string,
@@ -11,7 +13,6 @@ const useBroadcast = ({ roomCode, setCode, value }: useBroadCastData) => {
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    const socket = io('http://localhost:3001');
     socketRef.current = socket;
 
     const handleUpdate = ({ content }: { content: any }) => {
@@ -23,7 +24,6 @@ const useBroadcast = ({ roomCode, setCode, value }: useBroadCastData) => {
 
     return () => {
       socket.off('update-code', handleUpdate);
-      socket.disconnect(); 
     };
   }, []); 
 
