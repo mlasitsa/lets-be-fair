@@ -1,4 +1,6 @@
 import { io } from 'socket.io-client';
+// @ts-ignore
+import socket from '../utils/socket.js'
 
 interface Data {
   code: string,
@@ -9,17 +11,15 @@ interface Data {
 }
 
 const validateRoom = ({ code, isInterviewer, name, setRoomExist, onSuccess }: Data) => {
-  const socket = io('http://localhost:3001');
 
   socket.emit("checkRoom", { code, isInterviewer, name });
 
   const event = isInterviewer ? "checkRoom-interviewer" : "checkRoom-interviewee";
 
-  socket.on(event, (roomIsFree) => {
+  socket.on(event, (roomIsFree: any) => {
     if (isInterviewer) {
       if (roomIsFree) {
         onSuccess();
-        socket.disconnect();
         setRoomExist(true);
       } else {
         setRoomExist(false);
@@ -28,7 +28,6 @@ const validateRoom = ({ code, isInterviewer, name, setRoomExist, onSuccess }: Da
       setRoomExist(!roomIsFree);
       if (roomIsFree) {
         onSuccess();
-        socket.disconnect();
         setRoomExist(true);
       } else {
         setRoomExist(false);
@@ -36,12 +35,12 @@ const validateRoom = ({ code, isInterviewer, name, setRoomExist, onSuccess }: Da
     }
   });
 
-  // socket.on('user-left', (name) => {
-  //   setUserLeft(true)
-  // })
 
   return () => {
-    socket.disconnect(); 
+    socket.off('checkRoom')
+    socket.off('checkRoom-interviewer')
+    socket.off('checkRoom-interviewee')
+
   };
 
 };

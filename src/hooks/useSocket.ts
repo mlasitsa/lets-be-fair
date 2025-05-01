@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { io, Socket } from 'socket.io-client';
+// @ts-ignore
+import socket from '../utils/socket.js'
 
 interface UseSocketOptions {
   roomCode: string;
@@ -11,12 +13,11 @@ export function useSocket({ roomCode, setData, setIsInterviewer }: UseSocketOpti
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    const socket = io('http://localhost:3001');
     socketRef.current = socket;
 
     console.log("useSocket hook is running for room:", roomCode);
 
-    socket.on('session-started', ({ data, role }) => {
+    socket.on('session-started', ({ data, role } : {data: any, role: any}) => {
       console.log("CLIENT RECEIVED SESSION-STARTED", data);
       setData(data);
       setIsInterviewer(role === 'interviewer');
@@ -26,7 +27,7 @@ export function useSocket({ roomCode, setData, setIsInterviewer }: UseSocketOpti
     console.log("I just emmited code");
 
     return () => {
-      socket.disconnect();
+      socket.off('session-started');
     };
   }, [roomCode]);
 }
