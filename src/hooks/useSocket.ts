@@ -27,7 +27,7 @@ export function useSocket({ roomCode, setData, setIsInterviewer }: UseSocketOpti
     console.log("I just emmited code");
 
     return () => {
-      socket.off('session-started');
+      
     };
   }, [roomCode]);
 }

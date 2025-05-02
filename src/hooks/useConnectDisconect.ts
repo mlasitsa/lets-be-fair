@@ -13,7 +13,7 @@ const useConnectDisconect = ({setUserLeft, setUserJoined}: Data) => {
     useEffect(() => {
         socket.on('user-joined', (personName: any) => {
             setUserJoined(true)
-            console.log(`Name of the person that left is: ${personName}`)
+            console.log(`Name of the person that joined is: ${personName}`)
         })
 
         socket.on('user-left', (personName: any) => {

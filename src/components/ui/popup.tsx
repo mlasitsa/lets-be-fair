@@ -13,7 +13,7 @@ const Popup = ({show} : {show: boolean}) => {
               setDisplay(false);
             }, 5000);
         }
-    })
+    }, [show])
     
   return (
     <>

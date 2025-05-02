@@ -87,7 +87,7 @@ return (
               </div>
             </div>
 
-            {userJoined && <Popup show={true} />}
+            {userJoined && <Popup show={userJoined} />}
             {userLeft && <Popup show={userLeft} />}
 
             <div className='flex flex-row gap-10'>
