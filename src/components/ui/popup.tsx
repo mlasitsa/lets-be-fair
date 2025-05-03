@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react';
 
-const Popup = ({ show, name }: { show: string | boolean; name?: string | null }) =>  {
+type PopUpProps = {
+    show: string | boolean,
+    name?: string | null,
+    color? : string 
+}
+
+const Popup = ( {show, name = "No Name", color = "bg-black"} : PopUpProps) =>  {
   const [display, setDisplay] = useState(false);
 
   useEffect(() => {
@@ -16,7 +22,7 @@ const Popup = ({ show, name }: { show: string | boolean; name?: string | null })
   if (!display) return null;
 
   return (
-    <div className="bg-white text-black p-4 rounded shadow fixed top-10 right-10 z-50">
+    <div className={`${color} text-white p-4 rounded shadow fixed top-10 right-10 z-50`}>
       <h1>
         {
          display && name
