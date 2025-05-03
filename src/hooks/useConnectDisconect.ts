@@ -5,19 +5,22 @@ import socket from '../utils/socket.js'
 
 interface Data {
     setUserLeft: (val: boolean) => void,
-    setUserJoined: (val: boolean) => void
+    setUserJoined: (val: boolean) => void,
+    setName: (val: string) => void
 }
 
-const useConnectDisconect = ({setUserLeft, setUserJoined}: Data) => {
+const useConnectDisconect = ({setUserLeft, setUserJoined ,setName}: Data) => {
 
     useEffect(() => {
         socket.on('user-joined', (personName: any) => {
             setUserJoined(true)
+            setName(personName)
             console.log(`Name of the person that joined is: ${personName}`)
         })
 
         socket.on('user-left', (personName: any) => {
             setUserLeft(true)
+            setName(personName)
             console.log(`Name of the person that left is: ${personName}`);
             
         })

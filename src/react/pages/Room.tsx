@@ -47,6 +47,7 @@ const Room = () => {
     const [newProcesses, setNewProcesses] = useState<string[]>([])
     const [userLeft, setUserLeft] = useState<boolean>(false)
     const [userJoined, setUserJoined] = useState<boolean>(false)
+    const [name, setName] = useState<string>("")
 
     useSocket({
         roomCode: code,
@@ -56,7 +57,8 @@ const Room = () => {
 
     useConnectDisconect({
       setUserLeft: setUserLeft,
-      setUserJoined: setUserJoined
+      setUserJoined: setUserJoined,
+      setName: setName
     })
    
     useEffect(() => {
@@ -87,8 +89,8 @@ return (
               </div>
             </div>
 
-            {userJoined && <Popup show={userJoined} />}
-            {userLeft && <Popup show={userLeft} />}
+            {userJoined && <Popup show={userJoined} name={`${name} joined room`} />}
+            {userLeft && <Popup show={userLeft} name={`${name} left the room`} />}
 
             <div className='flex flex-row gap-10'>
               <Popverbutton 
