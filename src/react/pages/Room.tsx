@@ -89,8 +89,8 @@ return (
               </div>
             </div>
 
-            {userJoined && <Popup show={userJoined} name={`${name} joined room`} />}
-            {userLeft && <Popup show={userLeft} name={`${name} left the room`} />}
+            {userJoined && <Popup show={userJoined} name={`${name} joined room`} color={'bg-green-700'} />}
+            {userLeft && <Popup show={userLeft} name={`${name} left the room`}  color={'bg-red-700'}/>}
 
             <div className='flex flex-row gap-10'>
               <Popverbutton 
