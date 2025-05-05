@@ -9,19 +9,26 @@ interface Data {
     setName: (val: string) => void
 }
 
+interface UserData {
+    name: string,
+    role: string,
+    code: any
+}
+
 const useConnectDisconect = ({setUserLeft, setUserJoined ,setName}: Data) => {
 
     useEffect(() => {
-        socket.on('user-joined', (personName: any) => {
+
+        socket.on('user-joined', ({name, role, code} : UserData) => {
             setUserJoined(true)
-            setName(personName)
-            console.log(`Name of the person that joined is: ${personName}`)
+            setName(name)
+            console.log(`Name of the person that joined is: ${name}`)
         })
 
-        socket.on('user-left', (personName: any) => {
+        socket.on('user-left', ({name, role, code} : UserData) => {
             setUserLeft(true)
-            setName(personName)
-            console.log(`Name of the person that left is: ${personName}`);
+            setName(name)
+            console.log(`Name of the person that left is: ${name}`);
             
         })
 
