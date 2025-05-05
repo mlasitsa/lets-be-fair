@@ -22,6 +22,7 @@ const useConnectDisconect = ({setUserLeft, setUserJoined ,setName}: Data) => {
         socket.on('user-joined', ({name, role, code} : UserData) => {
             setUserJoined(true)
             setName(name)
+            console.log(name)
             console.log(`Name of the person that joined is: ${name}`)
         })
 
