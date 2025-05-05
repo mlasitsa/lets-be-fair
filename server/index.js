@@ -47,6 +47,18 @@ io.on('connection', (socket) => {
         socket.emit('checkRoom-interviewer', true);
         socket.to(code).emit('user-joined', socket.data.name)
       } else {
+        if (rooms[code] && rooms[code].interviewer.name == name) {
+          socket.data = {
+            code: code,
+            name: name,
+            socketId: socket.id,
+            role: 'interviewer'
+          }
+
+          rooms[code].interviewer.socketId = socket.id
+          socket.emit('checkRoom-interviewer', true);
+          socket.to(code).emit('user-joined', socket.data.name)
+        }
         socket.emit('checkRoom-interviewer', false);
       }
     } else {
@@ -128,21 +140,18 @@ io.on('connection', (socket) => {
     const isInterviewer = role === 'interviewer';
     console.log(`Your roomCode is ${code} and isInterview is ${isInterviewer}`);
     
-  
     if (!rooms[code]) return; 
-    socket.to(code).emit('user-left', name)
+    socket.to(code).emit('user-left', ({name, code, role}))
   
     if (isInterviewer) {
       console.log(`Interviewer left room ${code}`);
       // remove from room
-      rooms[code].interviewer = null
+      //rooms[code].interviewer = null
     } else {
       console.log(`Candidate left room ${code}`);
       //remove from room
-      rooms[code].candidate = null
+      //rooms[code].candidate = null
     }
-
-    
 
   });
 

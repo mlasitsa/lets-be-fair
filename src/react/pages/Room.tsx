@@ -67,6 +67,20 @@ const Room = () => {
     }, [data]);
 
     useEffect(() => {
+      if (userLeft) {
+        const timeout = setTimeout(() => setUserLeft(false), 4000);
+        return () => clearTimeout(timeout);
+      }
+    }, [userLeft]);
+    
+    useEffect(() => {
+      if (userJoined) {
+        const timeout = setTimeout(() => setUserJoined(false), 4000);
+        return () => clearTimeout(timeout);
+      }
+    }, [userJoined]);
+
+    useEffect(() => {
       if (data?.candidate.applications) {
         const labels = Object.entries(data.candidate.applications).map(([name, [label, count]]) => label);
         setNewProcesses((prev) => [...prev, ...labels]);
