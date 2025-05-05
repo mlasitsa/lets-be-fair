@@ -45,7 +45,7 @@ io.on('connection', (socket) => {
           content: null
         };
         socket.emit('checkRoom-interviewer', true);
-        socket.to(code).emit('user-joined', socket.data.name)
+        socket.to(code).emit('user-joined', {name: rooms[code].interviewer.name, role: 'interviewer', code: code})
       } else {
         if (rooms[code] && rooms[code].interviewer.name == name) {
           socket.data = {
@@ -57,7 +57,8 @@ io.on('connection', (socket) => {
 
           rooms[code].interviewer.socketId = socket.id
           socket.emit('checkRoom-interviewer', true);
-          socket.to(code).emit('user-joined', socket.data.name)
+          
+          socket.to(code).emit('user-joined', {name: rooms[code].interviewer.name, role: 'interviewer', code: code})
         }
         socket.emit('checkRoom-interviewer', false);
       }
@@ -80,7 +81,7 @@ io.on('connection', (socket) => {
           applications: undefined,
         };
         socket.emit('checkRoom-interviewee', true);
-        socket.to(code).emit('user-joined', socket.data.name)
+        socket.to(code).emit('user-joined', {name: rooms[code].candidate.name, role: 'candidate', code: code})
       } else {
         socket.emit('checkRoom-interviewee', false);
       }
